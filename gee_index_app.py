@@ -48,11 +48,11 @@ try:
             scopes=['https://www.googleapis.com/auth/earthengine']
         )
     ee.Initialize(credentials=credentials)      
-else:
-    st.info("ℹ️ No service account found. Contact juedborghi@gmail.com")
-    except Exception as e:
-        st.error(f"❌ Failed to initialize Earth Engine: {e}")
-        st.stop()
+    else:
+        st.info("ℹ️ No service account found. Contact juedborghi@gmail.com")
+        except Exception as e:
+            st.error(f"❌ Failed to initialize Earth Engine: {e}")
+            st.stop()
  
 # --- Google Cloud Project (Top Left) ---
 top_left, top_right = st.columns([1, 1])
