@@ -101,6 +101,7 @@ with top_left:
     else:
         manual_geometry = None
         st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 with top_middle:
     st.markdown('<div style="border-right: 2px solid #ddd; padding-right: 20px;">', unsafe_allow_html=True)
@@ -115,6 +116,7 @@ with top_middle:
     selected_palette = [color1, color2]
     mask_missing = st.checkbox("🖼️ Enmascarar áreas sin datos", value=False, 
                                help="Las áreas sin información se mostrarán en gris")
+    st.markdown('</div>', unsafe_allow_html=True)
     
 with top_right:
     st.markdown('<div style="border-right: 2px solid #ddd; padding-right: 20px;">', unsafe_allow_html=True)
@@ -127,6 +129,7 @@ with top_right:
         step=5,
         help="Porcentaje máximo de nubes permitido en las imágenes. Valores más altos incluyen más imágenes pero pueden tener nubes."
     )
+    st.markdown('</div>', unsafe_allow_html=True)
     st.divider()
     st.subheader("📅 Rango de tiempo")
     cola, colb = st.columns(2)
@@ -144,6 +147,7 @@ with top_right:
         valid_dates = False
     else:
         valid_dates = True
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Helper function to get dataset recommendations ---
 def get_dataset_recommendations(error_message):
