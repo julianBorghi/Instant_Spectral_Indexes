@@ -100,7 +100,7 @@ with top_left:
     else:
         manual_geometry = None
         st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
-    st.divider()
+    st.container(border=True)
 
 with top_middle:
     st.subheader("🎨 Parámetros de Visualización")
