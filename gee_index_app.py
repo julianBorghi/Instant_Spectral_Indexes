@@ -47,7 +47,7 @@ try:
             service_account_info,
             scopes=['https://www.googleapis.com/auth/earthengine']
         )
-    ee.Initialize(credentials=credentials)      
+        ee.Initialize(credentials=credentials)      
     else:
         st.info("ℹ️ No service account found. Contact juedborghi@gmail.com")
 except Exception as e:
