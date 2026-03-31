@@ -97,7 +97,6 @@ with top_left:
         area_size = area_width * area_height
         if area_size < 0.0001:
             st.warning("⚠️ El área seleccionada es muy pequeña. Considera ampliarla para mejores resultados.")
-        st.success(f"✅ Área manual: ({lon_min:.4f}, {lat_min:.4f}) a ({lon_max:.4f}, {lat_max:.4f})")
     else:
         manual_geometry = None
         st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
