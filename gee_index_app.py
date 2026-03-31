@@ -22,7 +22,7 @@ def init_session_state():
         'image': None,
         'thumb_url': None,
         'export_name': "Image_Export",
-        'export_folder': "GEE_Exports_Publico",
+        'export_folder': "1iy8F7QOOfh6SIvNbQP1QY90h3kXS3mAh",
         'export_format': "GeoTIFF",
         'export_crs': "EPSG:32719",
         'export_scale': 10,
@@ -653,7 +653,7 @@ with middle_right:
             with col1:
                 st.session_state.export_name = st.text_input("📝 Nombre del archivo", 
                                                             value=st.session_state.export_name)
-                st.session_state.export_folder = "GEE_Exporta_Publico"
+                st.session_state.export_folder = "1iy8F7QOOfh6SIvNbQP1QY90h3kXS3mAh"
                 st.session_state.export_scale = st.selectbox("📏 Escala (m/píxel)", 
                                                             [10, 20, 30, 60, 100, 250, 500],
                                                             index=[10, 20, 30, 60, 100, 250, 500].index(st.session_state.export_scale))
