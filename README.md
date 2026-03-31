@@ -3,6 +3,12 @@ WebApp para calcular Indices Espectrales de cualquier lugar Instantaneamente usa
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app)
 [![Earth Engine](https://img.shields.io/badge/Earth-Engine-4285F4)](https://earthengine.google.com/)
 
+## 🚀 Demo
+
+[https://t9cjpdsbnpqew36ejug6f6.streamlit.app/](https://t9cjpdsbnpqew36ejug6f6.streamlit.app/)
+
+Hosted en Streamlit cloud
+
 ## Tabla de Contenidos
 - [Características](#características)
 - [Índices Disponibles](#índices-disponibles)
@@ -60,11 +66,6 @@ WebApp para calcular Indices Espectrales de cualquier lugar Instantaneamente usa
 | NDGI | Normalized Difference Greenness Index | Verdor general |
 | FEAI | Feature Extraction AI | Extracción de características |
 
-## 🚀 Demo
-
-[https://t9cjpdsbnpqew36ejug6f6.streamlit.app/](https://t9cjpdsbnpqew36ejug6f6.streamlit.app/)
-
-Hosted en Streamlit cloud
 
 ## Estructura del Proyecto
 
