@@ -1,0 +1,5 @@
+earthengine-api
+streamlit
+streamlit-folium
+folium
+numpy
