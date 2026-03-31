@@ -669,8 +669,8 @@ with middle_right:
         
         # Export button
         if st.button("💾 Exportar a Google Drive", type="primary", use_container_width=True):
-            if 1 == 1:
-                st.error("❌ Funcion desabilitada para uso publico por reglas de Google Cloud")
+            st.error("❌ Funcion desabilitada para uso publico por reglas de uso y quota de Google Cloud")
+"""
             if not geometry:
                 st.error("❌ No hay geometría definida")
             else:
@@ -721,6 +721,7 @@ with middle_right:
                         
                 except Exception as e:
                     st.error(f"❌ Error al iniciar exportación: {str(e)}")
+"""
 
 # --- Sidebar with Help Information ---
 with st.sidebar:
