@@ -653,8 +653,11 @@ with middle_right:
             with col1:
                 st.session_state.export_name = st.text_input("📝 Nombre del archivo", 
                                                             value=st.session_state.export_name)
-                st.session_state.export_folder = st.text_input("📁 Carpeta en Drive", 
-                                                              value=st.session_state.export_folder)
+                st.session_state.export_folder = "GEE_Exporta_Publico"
+                st.session_state.export_scale = st.selectbox("📏 Escala (m/píxel)", 
+                                                            [10, 20, 30, 60, 100, 250, 500],
+                                                            index=[10, 20, 30, 60, 100, 250, 500].index(st.session_state.export_scale))
+
             with col2:
                 st.session_state.export_format = st.selectbox("📦 Formato", 
                                                              ["GeoTIFF", "TFRecord"], 
@@ -662,9 +665,6 @@ with middle_right:
                 st.session_state.export_crs = st.selectbox("🗺️ CRS", 
                                                           ["EPSG:32719", "EPSG:4326", "EPSG:3857"],
                                                           index=["EPSG:32719", "EPSG:4326", "EPSG:3857"].index(st.session_state.export_crs))
-                st.session_state.export_scale = st.selectbox("📏 Escala (m/píxel)", 
-                                                            [10, 20, 30, 60, 100, 250, 500],
-                                                            index=[10, 20, 30, 60, 100, 250, 500].index(st.session_state.export_scale))
         
         # Export button
         if st.button("💾 Exportar a Google Drive", type="primary", use_container_width=True):
@@ -685,6 +685,7 @@ with middle_right:
                         maxPixels=1e10,
                     )
                     task.start()
+                    st.success(f"✅ Tarea iniciada! ID: {task.id}")
                     
                     # Monitor progress
                     progress_bar = st.progress(0)
