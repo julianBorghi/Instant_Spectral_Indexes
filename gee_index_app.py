@@ -200,7 +200,7 @@ def get_dataset_recommendations(error_message):
                 "💬 **Verificar conexión** - Asegúrate de que Earth Engine esté funcionando correctamente"
             ]
         }
-
+st.divider()
 # --- Helper function to check data coverage ---
 def check_data_coverage(image, geometry, index_name):
     """Check if the image has sufficient data coverage"""
