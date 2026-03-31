@@ -50,7 +50,6 @@ with top_left:
         
             # The private key comes with escaped newlines, need to handle carefully
             if "private_key" in service_account_info:
-                # Ensure proper line breaks in private key
                 service_account_info["private_key"] = service_account_info["private_key"].replace("\\n", "\n")
         
             # Create credentials
@@ -60,9 +59,9 @@ with top_left:
             )
         
             # Initialize Earth Engine with service account
-            ee.Initialize(credentials)
-            ee.Authenticate()
+            ee.Initialize(credentials=credentials)
             st.success("✅ Earth Engine connected via Service Account!")
+            st.info(f"📧 Using: {service_account_info.get('client_email', 'service account')}")
         
         else:
             # Fall back to individual user projects
