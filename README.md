@@ -12,8 +12,6 @@ Hosted en Streamlit cloud
 ## Tabla de Contenidos
 - [Características](#características)
 - [Índices Disponibles](#índices-disponibles)
-- [Demo](#demo)
-- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Uso](#uso)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
@@ -67,63 +65,72 @@ Hosted en Streamlit cloud
 | FEAI | Feature Extraction AI | Extracción de características |
 
 
-## Estructura del Proyecto
-
-gee-spectral-indices/
-├── gee_index_app.py          # Aplicación principal
-├── requirements.txt          # Dependencias Python
-├── .streamlit/
-│   └── secrets.toml         # Secrets (no commitear!)
-├── projects.txt              # Proyectos guardados localmente
-└── README.md                # Este archivo
-
 ## Dependencias
 
 streamlit>=1.28.0
+
 earthengine-api>=0.1.370
+
 folium>=0.14.0
+
 streamlit-folium>=0.15.0
+
 numpy>=1.24.0
+
 google-auth>=2.23.0
+
 google-cloud-storage>=2.10.0
 
 ## Uso
 ### Paso 1: Definir Área de Interés
 
 Opción A: Dibuja un rectángulo en el mapa
+
 Opción B: Ingresa coordenadas manualmente
 
 ### Paso 2: Seleccionar Parámetros
 
 Rango de fechas (recomendado: 2-3 meses para buena cobertura)
+
 Tolerancia de nubes (20-50% para áreas nubladas)
+
 Elegir indice espectral deseado
 
 ### Paso 3: Generar Vista Previa
 
 Haz clic en "Generar Vista Previa"
+
 Espera a que se procese (10-30 segundos)
 
 ### Paso 4: Exportar (opcional)
 
 Configura nombre, carpeta y formato
+
 Exporta a Google Drive
 
 
 ## Roadmap
 Soporte para Landsat (bandas térmicas)
+
 Series temporales y gráficos de tendencias
+
 Descarga de estadísticas zonales (CSV)
+
 Más índices (NDRE, CVI, etc.)
+
 Soporte para múltiples idiomas
+
 Comparación lado a lado de índices
+
 
 ## Licencia
 Distribuido bajo licencia MIT. Ver LICENSE para más información.
 
 ## Agradecimientos
 Google Earth Engine - Plataforma de análisis geoespacial
+
 Streamlit - Framework para aplicaciones de datos
+
 Copernicus Sentinel-2 - Imágenes satelitales
 
 ## Contacto
