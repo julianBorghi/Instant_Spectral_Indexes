@@ -53,60 +53,7 @@ try:
 except Exception as e:
     st.error(f"❌ Failed to initialize Earth Engine: {e}")
     st.stop()
- 
-# --- Posicion espacial ---
-top_left, top_right = st.columns([1, 1])
-with top_left:
-    st.subheader("📍 Escribir Coordenadas")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        lon_min = st.number_input("Longitud Mín", value=st.session_state.coords[0] or -76.5, format="%.6f")
-        lat_min = st.number_input("Latitud Mín", value=st.session_state.coords[1] or -16.5, format="%.6f")
-    with col2:
-        lon_max = st.number_input("Longitud Máx", value=st.session_state.coords[2] or -75.5, format="%.6f")
-        lat_max = st.number_input("Latitud Máx", value=st.session_state.coords[3] or -15.5, format="%.6f")
 
-    if lon_max > lon_min and lat_max > lat_min:
-        manual_geometry = ee.Geometry.Rectangle([lon_min, lat_min, lon_max, lat_max])
-        st.session_state.coords = [lon_min, lat_min, lon_max, lat_max]
-        # Check area size
-        area_width = lon_max - lon_min
-        area_height = lat_max - lat_min
-        area_size = area_width * area_height
-        if area_size < 0.0001:
-            st.warning("⚠️ El área seleccionada es muy pequeña. Considera ampliarla para mejores resultados.")
-        st.success(f"✅ Área manual: ({lon_min:.4f}, {lat_min:.4f}) a ({lon_max:.4f}, {lat_max:.4f})")
-    else:
-        manual_geometry = None
-        st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
-
-# --- Visualization Parameters (Top Right) ---
-with top_right:
-    st.subheader("📅 Rango de tiempo")
-    cola, colb = st.columns(2)
-    with cola:
-        start_date = st.date_input("Fecha inicial", value=datetime.date(2025, 4, 1))
-    with colb:
-        end_date = st.date_input("Fecha final", value=datetime.date(2025, 5, 1))
-    st.subheader("🎨 Parámetros de Visualización")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        color1 = st.color_picker("Color para valor mínimo", "#000000")
-        vis_min = st.number_input("Valor mínimo", value=0.0, step=0.1, format="%.2f")
-    
-    with col2:
-        color2 = st.color_picker("Color para valor máximo", "#00FF00")
-        vis_max = st.number_input("Valor máximo", value=1.0, step=0.1, format="%.2f")
-    
-    selected_palette = [color1, color2]
-    
-    # Add option to mask missing data
-    mask_missing = st.checkbox("🖼️ Enmascarar áreas sin datos", value=False, 
-                               help="Las áreas sin información se mostrarán en gris")
-
-# --- Index Information Dictionary ---
 INDEX_INFO = {
     "NDVI": "🌿 **Normalized Difference Vegetation Index** - Mide la salud de la vegetación. (-1 a 1, valores altos = vegetación densa)",
     "SAVI": "🌱 **Soil Adjusted Vegetation Index** - Similar al NDVI pero corrige por brillo del suelo. Usa factor L=0.5",
@@ -129,113 +76,77 @@ INDEX_INFO = {
     "FEAI": "🏗️ **Feature Extraction AI** - Índice para extracción de características"
 }
 
-# --- Helper function to get dataset recommendations ---
-def get_dataset_recommendations(error_message):
-    """Provide dataset recommendations based on error type"""
-    error_lower = str(error_message).lower()
-    
-    if "no images" in error_lower or "no se encontraron" in error_lower:
-        return {
-            "title": "📸 No se encontraron imágenes",
-            "message": "No hay imágenes disponibles para el área y período seleccionados.",
-            "suggestions": [
-                "🔍 **Ampliar el rango de fechas** - Prueba con un período de 2-3 meses",
-                "🗺️ **Seleccionar un área más grande** - El área actual puede ser muy pequeña o estar sin cobertura",
-                "☁️ **Aumentar tolerancia a nubes** - Algunas áreas tienen mucha nubosidad constante",
-                "📅 **Usar fechas más recientes** - Las imágenes Sentinel-2 están disponibles desde 2015"
-            ]
-        }
-    elif "cloud" in error_lower or "cloudy" in error_lower:
-        return {
-            "title": "☁️ Problemas con nubes",
-            "message": "Las imágenes disponibles tienen demasiada cobertura de nubes.",
-            "suggestions": [
-                "📅 **Ampliar el rango de fechas** - Más días aumentan la probabilidad de encontrar días despejados",
-                "☁️ **Aumentar el porcentaje de nubes permitido** - Prueba con 50% o 80%",
-                "🗺️ **Seleccionar un área diferente** - Algunas zonas son naturalmente más nubladas",
-                "🔧 **Usar colección con filtro de nubes** - Ya estamos usando S2_SR_HARMONIZED que tiene corrección atmosférica"
-            ]
-        }
-    elif "geometry" in error_lower or "bounds" in error_lower:
-        return {
-            "title": "🗺️ Problemas con el área seleccionada",
-            "message": "El área seleccionada no es válida o está fuera de los límites.",
-            "suggestions": [
-                "📍 **Verificar coordenadas** - Asegúrate que latitud esté entre -90 y 90, longitud entre -180 y 180",
-                "📏 **Aumentar el tamaño del área** - El área puede ser demasiado pequeña",
-                "🖱️ **Dibujar nuevamente** - Intenta dibujar el rectángulo otra vez en el mapa"
-            ]
-        }
-    elif "timeout" in error_lower or "too large" in error_lower:
-        return {
-            "title": "⏱️ Tiempo de procesamiento excedido",
-            "message": "La solicitud está tomando demasiado tiempo o el área es muy grande.",
-            "suggestions": [
-                "🗺️ **Reducir el área de interés** - El área actual puede ser demasiado extensa",
-                "📏 **Aumentar la escala** - Prueba con una resolución espacial mayor (30m o 60m)",
-                "📅 **Reducir el rango de fechas** - Menos imágenes para procesar"
-            ]
-        }
+# --- Posicion espacial ---
+top_left, top_middle_left, top_middle_right, top_right = st.columns([1, 1, 1, 1])
+
+with top_left:
+    st.subheader("📍 Escribir Coordenadas")
+    col1, col2 = st.columns(2)
+    with col1:
+        lon_min = st.number_input("Longitud Mín", value=st.session_state.coords[0] or -76.5, format="%.6f")
+        lat_min = st.number_input("Latitud Mín", value=st.session_state.coords[1] or -16.5, format="%.6f")
+    with col2:
+        lon_max = st.number_input("Longitud Máx", value=st.session_state.coords[2] or -75.5, format="%.6f")
+        lat_max = st.number_input("Latitud Máx", value=st.session_state.coords[3] or -15.5, format="%.6f")
+    if lon_max > lon_min and lat_max > lat_min:
+        manual_geometry = ee.Geometry.Rectangle([lon_min, lat_min, lon_max, lat_max])
+        st.session_state.coords = [lon_min, lat_min, lon_max, lat_max]
+        # Check area size
+        area_width = lon_max - lon_min
+        area_height = lat_max - lat_min
+        area_size = area_width * area_height
+        if area_size < 0.0001:
+            st.warning("⚠️ El área seleccionada es muy pequeña. Considera ampliarla para mejores resultados.")
+        st.success(f"✅ Área manual: ({lon_min:.4f}, {lat_min:.4f}) a ({lon_max:.4f}, {lat_max:.4f})")
     else:
-        return {
-            "title": "⚠️ Error inesperado",
-            "message": f"Ocurrió un error al procesar los datos: {error_message}",
-            "suggestions": [
-                "🔄 **Intentar nuevamente** - A veces es un problema temporal",
-                "📅 **Ampliar el rango de fechas** - Más datos pueden ayudar",
-                "🗺️ **Seleccionar un área diferente** - Prueba con otra ubicación",
-                "💬 **Verificar conexión** - Asegúrate de que Earth Engine esté funcionando correctamente"
-            ]
-        }
+        manual_geometry = None
+        st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
 
-# --- Helper function to check data coverage ---
-def check_data_coverage(image, geometry, index_name):
-    """Check if the image has sufficient data coverage"""
-    try:
-        # Get pixel count and statistics
-        stats = image.reduceRegion(
-            reducer=ee.Reducer.count(),
-            geometry=geometry,
-            scale=1000,  # 1km resolution for quick check
-            maxPixels=1e9,
-            bestEffort=True
-        )
-        
-        pixel_count = stats.get('index').getInfo()
-        
-        if pixel_count is None or pixel_count == 0:
-            return {
-                'has_data': False,
-                'message': "⚠️ No se encontraron datos válidos en el área seleccionada.",
-                'suggestion': "📅 Prueba con un rango de fechas más amplio (2-3 meses) para tener más imágenes disponibles."
-            }
-        
-        # Check if the area is partially covered
-        total_pixels = geometry.area().divide(1000 * 1000).getInfo()  # Approximate 1km pixels
-        coverage_ratio = pixel_count / total_pixels if total_pixels > 0 else 0
-        
-        if coverage_ratio < 0.3:
-            return {
-                'has_data': True,
-                'coverage_ratio': coverage_ratio,
-                'warning': f"⚠️ Solo {coverage_ratio:.1%} del área tiene datos válidos.",
-                'suggestion': "📅 Considera ampliar el rango de fechas para obtener mejor cobertura espacial."
-            }
-        
-        return {
-            'has_data': True,
-            'coverage_ratio': coverage_ratio,
-            'quality': 'good'
-        }
-        
-    except Exception as e:
-        return {
-            'has_data': False,
-            'message': f"Error al verificar la cobertura de datos: {str(e)}"
-        }
 
-# --- Coordinates (Middle Left) & Time (Middle Right) ---
-middle_left, middle_right = st.columns([1.5, 1])
+
+with top_middle_right:
+    st.subheader("🎨 Parámetros de Visualización")
+    col1, col2 = st.columns(2)
+    with col1:
+        color1 = st.color_picker("Color para valor mínimo", "#000000")
+        vis_min = st.number_input("Valor mínimo", value=0.0, step=0.1, format="%.2f")
+    with col2:
+        color2 = st.color_picker("Color para valor máximo", "#00FF00")
+        vis_max = st.number_input("Valor máximo", value=1.0, step=0.1, format="%.2f")
+    selected_palette = [color1, color2]
+    mask_missing = st.checkbox("🖼️ Enmascarar áreas sin datos", value=False, 
+                               help="Las áreas sin información se mostrarán en gris")
+with top_middle_right:
+    st.subheader("☁️ Tolerancia de nubes (%)")
+    cloud_tolerance = st.slider(
+        "Maxima covertura permitida",
+        min_value=0,
+        max_value=100,
+        value=20,
+        step=5,
+        help="Porcentaje máximo de nubes permitido en las imágenes. Valores más altos incluyen más imágenes pero pueden tener nubes."
+    )
+with top_right:
+    st.subheader("📅 Rango de tiempo")
+    cola, colb = st.columns(2)
+    with cola:
+        start_date = st.date_input("Fecha inicial", value=datetime.date(2025, 4, 1))
+    with colb:
+        end_date = st.date_input("Fecha final", value=datetime.date(2025, 5, 1))
+    date_range_days = (end_date - start_date).days
+    if date_range_days < 30:
+        st.info(f"ℹ️ Rango de {date_range_days} días. Si no hay datos, amplía a 2-3 meses.")
+    elif date_range_days > 180:
+        st.info(f"ℹ️ Rango de {date_range_days} días. Procesar muchas imágenes puede tomar tiempo.")
+    
+    if start_date >= end_date:
+        st.error("❌ La fecha final debe ser posterior a la inicial")
+        valid_dates = False
+    else:
+        valid_dates = True
+
+
+middle_left, middle_right = st.columns([3, 1])
 
 with middle_left:
     st.subheader("🗺️ Dibujar Rectángulo en el Mapa")
@@ -292,7 +203,6 @@ with middle_left:
         position='topleft'
     ).add_to(m)
 
-    # Display map
     draw_result = st_folium(m, width=700, height=500, key="map")
 
     # Process drawing result
@@ -317,41 +227,6 @@ with middle_left:
         else:
             st.warning("⚠️ Por favor, dibuje solo un rectángulo")
             
-with middle_right:
-    st.subheader("☁️ Tolerancia de nubes (%)")
-    cloud_tolerance = st.slider(
-        "Maxima covertura permitida",
-        min_value=0,
-        max_value=100,
-        value=20,
-        step=5,
-        help="Porcentaje máximo de nubes permitido en las imágenes. Valores más altos incluyen más imágenes pero pueden tener nubes."
-    )
-    
-    # Calculate date range length
-    date_range_days = (end_date - start_date).days
-    if date_range_days < 30:
-        st.info(f"ℹ️ Rango de {date_range_days} días. Si no hay datos, amplía a 2-3 meses.")
-    elif date_range_days > 180:
-        st.info(f"ℹ️ Rango de {date_range_days} días. Procesar muchas imágenes puede tomar tiempo.")
-    
-    # Validate date range
-    if start_date >= end_date:
-        st.error("❌ La fecha final debe ser posterior a la inicial")
-        valid_dates = False
-    else:
-        valid_dates = True
-
-# --- Bottom Layout: Map Left, Preview/Export Right ---
-bottom_left, bottom_right = st.columns([1.5, 1])
-
-
-# Define geometry if coordinates are valid
-if all(c is not None for c in st.session_state.coords):
-    geometry = ee.Geometry.Rectangle(st.session_state.coords)
-else:
-    geometry = None
-
 # --- Index Selection, Preview and Export (Bottom Right) ---
 with bottom_right:
     st.subheader("📊 Selección de Índice")
@@ -733,6 +608,119 @@ with bottom_right:
                         
                 except Exception as e:
                     st.error(f"❌ Error al iniciar exportación: {str(e)}")
+
+    
+# --- Helper function to get dataset recommendations ---
+def get_dataset_recommendations(error_message):
+    """Provide dataset recommendations based on error type"""
+    error_lower = str(error_message).lower()
+    
+    if "no images" in error_lower or "no se encontraron" in error_lower:
+        return {
+            "title": "📸 No se encontraron imágenes",
+            "message": "No hay imágenes disponibles para el área y período seleccionados.",
+            "suggestions": [
+                "🔍 **Ampliar el rango de fechas** - Prueba con un período de 2-3 meses",
+                "🗺️ **Seleccionar un área más grande** - El área actual puede ser muy pequeña o estar sin cobertura",
+                "☁️ **Aumentar tolerancia a nubes** - Algunas áreas tienen mucha nubosidad constante",
+                "📅 **Usar fechas más recientes** - Las imágenes Sentinel-2 están disponibles desde 2015"
+            ]
+        }
+    elif "cloud" in error_lower or "cloudy" in error_lower:
+        return {
+            "title": "☁️ Problemas con nubes",
+            "message": "Las imágenes disponibles tienen demasiada cobertura de nubes.",
+            "suggestions": [
+                "📅 **Ampliar el rango de fechas** - Más días aumentan la probabilidad de encontrar días despejados",
+                "☁️ **Aumentar el porcentaje de nubes permitido** - Prueba con 50% o 80%",
+                "🗺️ **Seleccionar un área diferente** - Algunas zonas son naturalmente más nubladas",
+                "🔧 **Usar colección con filtro de nubes** - Ya estamos usando S2_SR_HARMONIZED que tiene corrección atmosférica"
+            ]
+        }
+    elif "geometry" in error_lower or "bounds" in error_lower:
+        return {
+            "title": "🗺️ Problemas con el área seleccionada",
+            "message": "El área seleccionada no es válida o está fuera de los límites.",
+            "suggestions": [
+                "📍 **Verificar coordenadas** - Asegúrate que latitud esté entre -90 y 90, longitud entre -180 y 180",
+                "📏 **Aumentar el tamaño del área** - El área puede ser demasiado pequeña",
+                "🖱️ **Dibujar nuevamente** - Intenta dibujar el rectángulo otra vez en el mapa"
+            ]
+        }
+    elif "timeout" in error_lower or "too large" in error_lower:
+        return {
+            "title": "⏱️ Tiempo de procesamiento excedido",
+            "message": "La solicitud está tomando demasiado tiempo o el área es muy grande.",
+            "suggestions": [
+                "🗺️ **Reducir el área de interés** - El área actual puede ser demasiado extensa",
+                "📏 **Aumentar la escala** - Prueba con una resolución espacial mayor (30m o 60m)",
+                "📅 **Reducir el rango de fechas** - Menos imágenes para procesar"
+            ]
+        }
+    else:
+        return {
+            "title": "⚠️ Error inesperado",
+            "message": f"Ocurrió un error al procesar los datos: {error_message}",
+            "suggestions": [
+                "🔄 **Intentar nuevamente** - A veces es un problema temporal",
+                "📅 **Ampliar el rango de fechas** - Más datos pueden ayudar",
+                "🗺️ **Seleccionar un área diferente** - Prueba con otra ubicación",
+                "💬 **Verificar conexión** - Asegúrate de que Earth Engine esté funcionando correctamente"
+            ]
+        }
+
+# --- Helper function to check data coverage ---
+def check_data_coverage(image, geometry, index_name):
+    """Check if the image has sufficient data coverage"""
+    try:
+        # Get pixel count and statistics
+        stats = image.reduceRegion(
+            reducer=ee.Reducer.count(),
+            geometry=geometry,
+            scale=1000,  # 1km resolution for quick check
+            maxPixels=1e9,
+            bestEffort=True
+        )
+        
+        pixel_count = stats.get('index').getInfo()
+        
+        if pixel_count is None or pixel_count == 0:
+            return {
+                'has_data': False,
+                'message': "⚠️ No se encontraron datos válidos en el área seleccionada.",
+                'suggestion': "📅 Prueba con un rango de fechas más amplio (2-3 meses) para tener más imágenes disponibles."
+            }
+        
+        # Check if the area is partially covered
+        total_pixels = geometry.area().divide(1000 * 1000).getInfo()  # Approximate 1km pixels
+        coverage_ratio = pixel_count / total_pixels if total_pixels > 0 else 0
+        
+        if coverage_ratio < 0.3:
+            return {
+                'has_data': True,
+                'coverage_ratio': coverage_ratio,
+                'warning': f"⚠️ Solo {coverage_ratio:.1%} del área tiene datos válidos.",
+                'suggestion': "📅 Considera ampliar el rango de fechas para obtener mejor cobertura espacial."
+            }
+        
+        return {
+            'has_data': True,
+            'coverage_ratio': coverage_ratio,
+            'quality': 'good'
+        }
+        
+    except Exception as e:
+        return {
+            'has_data': False,
+            'message': f"Error al verificar la cobertura de datos: {str(e)}"
+        }
+            
+# Define geometry if coordinates are valid
+if all(c is not None for c in st.session_state.coords):
+    geometry = ee.Geometry.Rectangle(st.session_state.coords)
+else:
+    geometry = None
+
 
 # --- Sidebar with Help Information ---
 with st.sidebar:
