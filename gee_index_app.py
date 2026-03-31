@@ -103,6 +103,7 @@ with top_left:
         st.warning("⚠️ Ingrese coordenadas válidas (máx > mín)")
 
 with top_middle:
+    st.markdown('<div style="border-right: 2px solid #ddd; padding-right: 20px;">', unsafe_allow_html=True)
     st.subheader("🎨 Parámetros de Visualización")
     col1, col2 = st.columns(2)
     with col1:
@@ -116,6 +117,7 @@ with top_middle:
                                help="Las áreas sin información se mostrarán en gris")
     
 with top_right:
+    st.markdown('<div style="border-right: 2px solid #ddd; padding-right: 20px;">', unsafe_allow_html=True)
     st.subheader("☁️ Tolerancia de nubes (%)")
     cloud_tolerance = st.slider(
         "Maxima covertura permitida",
@@ -125,7 +127,7 @@ with top_right:
         step=5,
         help="Porcentaje máximo de nubes permitido en las imágenes. Valores más altos incluyen más imágenes pero pueden tener nubes."
     )
-    
+    st.divider()
     st.subheader("📅 Rango de tiempo")
     cola, colb = st.columns(2)
     with cola:
