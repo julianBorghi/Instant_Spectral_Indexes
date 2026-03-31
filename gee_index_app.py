@@ -22,7 +22,7 @@ def init_session_state():
         'image': None,
         'thumb_url': None,
         'export_name': "Image_Export",
-        'export_folder': "GEE_Exports",
+        'export_folder': "GEE_Exports_Publico",
         'export_format': "GeoTIFF",
         'export_crs': "EPSG:32719",
         'export_scale': 10,
