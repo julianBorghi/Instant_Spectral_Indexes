@@ -669,7 +669,7 @@ with middle_right:
         
         # Export button
         if st.button("💾 Exportar a Google Drive", type="primary", use_container_width=True):
-            if true:
+            if 1 = 1:
                 st.error("❌ Funcion desabilitada para uso publico por reglas de Google Cloud")
             if not geometry:
                 st.error("❌ No hay geometría definida")
