@@ -2,7 +2,7 @@ WebApp para calcular Indices Espectrales de cualquier lugar Instantaneamente usa
 
 ## 🚀 Demo online libre
 
-[https://t9cjpdsbnpqew36ejug6f6.streamlit.app/](https://t9cjpdsbnpqew36ejug6f6.streamlit.app/)
+[https://instantspectralindexes-zkvfmhmue8hherne645kxc.streamlit.app/](https://instantspectralindexes-zkvfmhmue8hherne645kxc.streamlit.app/)
 
 Hosted en Streamlit cloud
 
