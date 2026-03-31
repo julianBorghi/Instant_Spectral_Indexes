@@ -670,58 +670,57 @@ with middle_right:
         # Export button
         if st.button("💾 Exportar a Google Drive", type="primary", use_container_width=True):
             st.error("❌ Funcion desabilitada para uso publico por reglas de uso y quota de Google Cloud")
-"""#
-            if not geometry:
-                st.error("❌ No hay geometría definida")
-            else:
-                try:
-                    # Create export task
-                    task = ee.batch.Export.image.toDrive(
-                        image=st.session_state.image,
-                        description=st.session_state.export_name,
-                        folder=st.session_state.export_folder,
-                        fileNamePrefix=st.session_state.export_name,
-                        region=geometry,
-                        scale=st.session_state.export_scale,
-                        crs=st.session_state.export_crs,
-                        fileFormat=st.session_state.export_format,
-                        maxPixels=1e10,
-                    )
-                    task.start()
-                    st.success(f"✅ Tarea iniciada! ID: {task.id}")
+
+            # if not geometry:
+            #     st.error("❌ No hay geometría definida")
+            # else:
+            #     try:
+            #         # Create export task
+            #         task = ee.batch.Export.image.toDrive(
+            #             image=st.session_state.image,
+            #             description=st.session_state.export_name,
+            #             folder=st.session_state.export_folder,
+            #             fileNamePrefix=st.session_state.export_name,
+            #             region=geometry,
+            #             scale=st.session_state.export_scale,
+            #             crs=st.session_state.export_crs,
+            #             fileFormat=st.session_state.export_format,
+            #             maxPixels=1e10,
+            #         )
+            #         task.start()
+            #         st.success(f"✅ Tarea iniciada! ID: {task.id}")
                     
-                    # Monitor progress
-                    progress_bar = st.progress(0)
-                    status_text = st.empty()
+            #         # Monitor progress
+            #         progress_bar = st.progress(0)
+            #         status_text = st.empty()
                     
-                    for i in range(60):  # Monitor for up to 5 minutes (60 * 5s)
-                        status = task.status()
-                        state = status['state']
+            #         for i in range(60):  # Monitor for up to 5 minutes (60 * 5s)
+            #             status = task.status()
+            #             state = status['state']
                         
-                        # Update progress based on state
-                        if state == 'READY':
-                            progress_bar.progress(10)
-                            status_text.info("⏳ Tarea preparada, esperando ejecución...")
-                        elif state == 'RUNNING':
-                            progress_bar.progress(50)
-                            status_text.info("⚙️ Ejecutando exportación...")
-                        elif state == 'COMPLETED':
-                            progress_bar.progress(100)
-                            status_text.success("✅ ¡Exportación completada exitosamente!")
-                            break
-                        elif state in ['FAILED', 'CANCELLED']:
-                            error_msg = status.get('error_message', 'Error desconocido')
-                            status_text.error(f"❌ Error: {error_msg}")
-                            break
+            #             # Update progress based on state
+            #             if state == 'READY':
+            #                 progress_bar.progress(10)
+            #                 status_text.info("⏳ Tarea preparada, esperando ejecución...")
+            #             elif state == 'RUNNING':
+            #                 progress_bar.progress(50)
+            #                 status_text.info("⚙️ Ejecutando exportación...")
+            #             elif state == 'COMPLETED':
+            #                 progress_bar.progress(100)
+            #                 status_text.success("✅ ¡Exportación completada exitosamente!")
+            #                 break
+            #             elif state in ['FAILED', 'CANCELLED']:
+            #                 error_msg = status.get('error_message', 'Error desconocido')
+            #                 status_text.error(f"❌ Error: {error_msg}")
+            #                 break
                         
-                        time.sleep(5)
+            #             time.sleep(5)
                     
-                    if state not in ['COMPLETED', 'FAILED', 'CANCELLED']:
-                        status_text.warning("⏱️ La exportación continúa en segundo plano. Verifique en Google Drive.")
+            #         if state not in ['COMPLETED', 'FAILED', 'CANCELLED']:
+            #             status_text.warning("⏱️ La exportación continúa en segundo plano. Verifique en Google Drive.")
                         
-                except Exception as e:
-                    st.error(f"❌ Error al iniciar exportación: {str(e)}")
-"""#
+            #     except Exception as e:
+            #         st.error(f"❌ Error al iniciar exportación: {str(e)}")
 
 # --- Sidebar with Help Information ---
 with st.sidebar:
